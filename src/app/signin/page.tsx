@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { EmailInput } from "../../components/EmailInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import SubmitBtn from "../../components/SubmitBtn";
@@ -7,15 +7,16 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 // Password123!
-const checkMe = async () => {
-  const url = process.env.NEXT_PUBLIC_API_URL + "/auth/whoami";
-  const res = await axios.get(url);
 
-  console.log("sign in res>>> ", res);
-};
 const SignIn = () => {
   const router = useRouter();
-  const handleSubmit = async (e: FormData) => {
+  const handleSubmit = useCallback(async (e: FormData) => {
+    const checkMe = async () => {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/auth/whoami";
+      const res = await axios.get(url, { withCredentials: true });
+
+      console.log("sign in res>>> ", res);
+    };
     const email = e.get("email");
     const password = e.get("password");
     const bodyData: any = {
@@ -23,7 +24,7 @@ const SignIn = () => {
       password,
     };
     const url = process.env.NEXT_PUBLIC_API_URL + "/auth/signin";
-    const res = await axios.post(url, bodyData);
+    const res = await axios.post(url, bodyData, { withCredentials: true });
     // const res = await fetch(url, {
     //   // mode: "no-cors",
     //   method: "POST",
@@ -39,7 +40,7 @@ const SignIn = () => {
     if (res.data.email) {
       checkMe();
     }
-  };
+  }, []);
 
   const title = "Sign In";
   return (
