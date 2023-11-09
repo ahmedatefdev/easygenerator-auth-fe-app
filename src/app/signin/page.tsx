@@ -5,10 +5,14 @@ import { PasswordInput } from "../../components/PasswordInput";
 import SubmitBtn from "../../components/SubmitBtn";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { checkMe } from "../page";
 import axios from "axios";
 // Password123!
+const checkMe = async () => {
+  const url = process.env.NEXT_PUBLIC_API_URL + "/auth/whoami";
+  const res = await axios.get(url);
 
+  console.log("sign in res>>> ", res);
+};
 const SignIn = () => {
   const router = useRouter();
   const handleSubmit = async (e: FormData) => {

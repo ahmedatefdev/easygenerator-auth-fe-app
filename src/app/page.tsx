@@ -2,15 +2,7 @@
 
 import axios from "axios";
 
-export const checkMe = async () => {
-  const url = process.env.NEXT_PUBLIC_API_URL + "/auth/whoami";
-  const res = await axios.get(url);
-
-  console.log("sign in res>>> ", res);
-};
-
 export default async function Home() {
-  checkMe();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex justify-center flex-col gap-10">

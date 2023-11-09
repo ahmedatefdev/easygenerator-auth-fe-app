@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 import { InteractiveInput } from "../../components/InteractiveInput";
 import { EmailInput } from "../../components/EmailInput";
 import { PasswordInput } from "../../components/PasswordInput";
-import SubmitBtn from "@/components/SubmitBTn";
+import SubmitBtn from "../../components/SubmitBtn";
 import { redirect } from "next/navigation";
 
 const SignUp = () => {
