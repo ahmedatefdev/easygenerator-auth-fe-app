@@ -37,7 +37,7 @@ const SignIn = () => {
     console.log("🚀 ~ file: page.tsx:26 ~ handleSubmit ~ res:", res);
     // const jsonRes = await res.json();
     console.log("sign up res>>> ", res);
-    if (res.data.email) {
+    if (res.data) {
       checkMe();
     }
   }, []);
