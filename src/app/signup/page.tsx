@@ -4,15 +4,19 @@ import { EmailInput } from "../../components/EmailInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import SubmitBtn from "../../components/SubmitBtn";
 import { redirect } from "next/navigation";
+import SignUpBTN from "@/components/SignUpBTN";
+import SignInBTN from "@/components/SignInBTN";
 
 const SignUp = () => {
   const handleSubmit = async (e: FormData) => {
     "use server";
     const email = e.get("email");
     const password = e.get("password");
+    const username = e.get("username");
     const bodyData: any = {
       email,
       password,
+      name: username,
     };
     const url = process.env.NEXT_PUBLIC_API_URL + "/auth/signup";
     const res = await fetch(url, {
@@ -24,7 +28,6 @@ const SignUp = () => {
       body: JSON.stringify(bodyData),
     });
     const jsonRes = await res.json();
-    console.log("sign up res>>> ", jsonRes);
     if (jsonRes.email) {
       redirect("/signin");
     }
@@ -58,6 +61,7 @@ const SignUp = () => {
                 </svg>
               </span>
               <input
+                name="username"
                 type="text"
                 id="website-admin"
                 className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -80,6 +84,7 @@ const SignUp = () => {
             <InteractiveInput />
           </div>
           <SubmitBtn />
+          <SignInBTN />
         </form>
       </div>
     </>
