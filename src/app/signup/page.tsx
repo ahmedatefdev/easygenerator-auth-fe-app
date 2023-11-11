@@ -1,36 +1,18 @@
-import React, { FormEvent } from "react";
+"use client";
+
+import React, { FormEvent, useState } from "react";
 import { InteractiveInput } from "../../components/InteractiveInput";
 import { EmailInput } from "../../components/EmailInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import SubmitBtn from "../../components/SubmitBtn";
-import { redirect } from "next/navigation";
 import SignUpBTN from "@/components/SignUpBTN";
 import SignInBTN from "@/components/SignInBTN";
-
+import { ErrorText } from "@/components/ErrorText";
+import { handleSubmit } from "./handleSubmitServerAction";
 const SignUp = () => {
-  const handleSubmit = async (e: FormData) => {
-    "use server";
-    const email = e.get("email");
-    const password = e.get("password");
-    const username = e.get("username");
-    const bodyData: any = {
-      email,
-      password,
-      name: username,
-    };
-    const url = process.env.NEXT_PUBLIC_API_URL + "/auth/signup";
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "x-guest": "error",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyData),
-    });
-    const jsonRes = await res.json();
-    if (jsonRes.email) {
-      redirect("/signin");
-    }
+  const [error, setError] = useState("");
+  const handelError = (error: any) => {
+    setError(error);
   };
 
   const title = "Sign Up";
@@ -38,7 +20,15 @@ const SignUp = () => {
   return (
     <>
       <div className="flex flex-col justify-center items-center w-full h-full m-10">
-        <form className="w-1/2" action={handleSubmit}>
+        <form
+          className="w-1/2"
+          action={async (e) => {
+            const res: any = await handleSubmit(e);
+            if (res) {
+              return setError(res?.message || "Error");
+            }
+          }}
+        >
           <h1 className="self-start text-xl mb-5">{title}</h1>
           <EmailInput />
           <div className="mb-6 w-full">
@@ -86,6 +76,7 @@ const SignUp = () => {
           <SubmitBtn />
           <SignInBTN />
         </form>
+        {!!error && <ErrorText error={error} />}
       </div>
     </>
   );

@@ -1,16 +1,19 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { EmailInput } from "../../components/EmailInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import SubmitBtn from "../../components/SubmitBtn";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import SignInBTN from "@/components/SignInBTN";
 import SignUpBTN from "@/components/SignUpBTN";
+import { ErrorText } from "../../components/ErrorText";
 
 const SignIn = () => {
   const router = useRouter();
+  const [error, setError] = useState("");
+
   const handleSubmit = useCallback(async (e: FormData) => {
+    setError("");
     const email = e.get("email");
     const password = e.get("password");
     const bodyData: any = {
@@ -18,10 +21,15 @@ const SignIn = () => {
       password,
     };
     const url = process.env.NEXT_PUBLIC_API_URL + "/auth/signin";
-    const res = await axios.post(url, bodyData, { withCredentials: true });
+    try {
+      const res = await axios.post(url, bodyData, { withCredentials: true });
 
-    if (res.data) {
-      router.push("/");
+      if (res.data) {
+        router.push("/");
+      }
+    } catch (error: any) {
+      console.log("🚀 ~ error:", error);
+      return setError("Error: " + error?.response?.data?.message || "Error");
     }
   }, []);
 
@@ -36,9 +44,10 @@ const SignIn = () => {
           <PasswordInput />
 
           <SubmitBtn />
-          
+
           <SignUpBTN />
         </form>
+        {!!error && <ErrorText error={error} />}
       </div>
     </>
   );
